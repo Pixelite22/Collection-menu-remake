@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://c420dvhmx2274"]
+
+[ext_resource type="Script" uid="uid://dmo6i1ikgftts" path="res://Scenes and Code/Code/game_display_3d.gd" id="1_cw7yx"]
+[ext_resource type="PackedScene" uid="uid://bobdvhw4jhh8n" path="res://Scenes and Code/Scenes/game_display.tscn" id="1_ktq8s"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_cw7yx"]
+size = Vector2(1.786, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ktq8s"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cw7yx"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_ktq8s")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lar8q"]
+size = Vector3(1.7860718, 1, 0.02784375)
+
+[node name="Game Display 3D" type="Node3D" unique_id=1588757938]
+script = ExtResource("1_cw7yx")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=611767536]
+handle_input_locally = false
+size = Vector2i(316, 179)
+
+[node name="Control" type="Control" parent="SubViewport" unique_id=1939787540]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Game Display" parent="SubViewport/Control" unique_id=743895997 instance=ExtResource("1_ktq8s")]
+layout_mode = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1374786480]
+mesh = SubResource("QuadMesh_cw7yx")
+surface_material_override/0 = SubResource("StandardMaterial3D_cw7yx")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1209079165]
+
+[node name="Collision" type="CollisionShape3D" parent="Area3D" unique_id=2123356468]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002532959, 0, -0.0034112222)
+shape = SubResource("BoxShape3D_lar8q")
+
+[connection signal="input_event" from="Area3D" to="." method="_on_area_3d_input_event"]

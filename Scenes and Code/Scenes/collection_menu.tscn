@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://cgc7r7lr7b2e1"]
+
+[ext_resource type="Script" uid="uid://dg2wuit8kyypn" path="res://Scenes and Code/Code/collection_menu.gd" id="1_5qddx"]
+[ext_resource type="PackedScene" uid="uid://bobdvhw4jhh8n" path="res://Scenes and Code/Scenes/game_display.tscn" id="6_dt4g8"]
+
+[node name="Collection Menu" type="Control" unique_id=1766728928]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5qddx")
+
+[node name="Menu Contents" type="Node" parent="." unique_id=1208039525]
+
+[node name="ColorRect" type="ColorRect" parent="Menu Contents" unique_id=1094532604]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="RichTextLabel" parent="Menu Contents" unique_id=1788551678]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 43
+text = "Practice Collection!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Buttons" type="Node" parent="Menu Contents" unique_id=692177353]
+
+[node name="Pongalong Display" parent="Menu Contents/Buttons" unique_id=743895997 instance=ExtResource("6_dt4g8")]
+offset_left = 25.0
+offset_top = 143.0
+offset_right = 341.0
+offset_bottom = 321.0
+
+[node name="Comin to Town Display" parent="Menu Contents/Buttons" unique_id=1549429867 instance=ExtResource("6_dt4g8")]
+offset_left = 807.0
+offset_top = 143.0
+offset_right = 1123.0
+offset_bottom = 321.0
+
+[node name="Publix Accounting App Display" parent="Menu Contents/Buttons" unique_id=1554150830 instance=ExtResource("6_dt4g8")]
+offset_left = 25.0
+offset_top = 397.0
+offset_right = 341.0
+offset_bottom = 575.0
+
+[node name="Scoundrel Display" parent="Menu Contents/Buttons" unique_id=1173847842 instance=ExtResource("6_dt4g8")]
+offset_left = 417.0
+offset_top = 397.0
+offset_right = 733.0
+offset_bottom = 575.0
+
+[node name="Lamplighters Display" parent="Menu Contents/Buttons" unique_id=885582133 instance=ExtResource("6_dt4g8")]
+offset_left = 807.0
+offset_top = 397.0
+offset_right = 1123.0
+offset_bottom = 575.0
+
+[node name="Hack and Sketch Display" parent="Menu Contents/Buttons" unique_id=1167259582 instance=ExtResource("6_dt4g8")]
+offset_left = 417.0
+offset_top = 143.0
+offset_right = 733.0
+offset_bottom = 321.0
+
+[node name="Audio Player" type="AudioStreamPlayer2D" parent="Menu Contents" unique_id=1584199159]
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

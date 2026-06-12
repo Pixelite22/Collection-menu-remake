@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://ct6ja62rpqc1l"]
+
+[ext_resource type="Script" uid="uid://bbrut8ay1htxo" path="res://Scenes and Code/Code/collection_menu_3d.gd" id="1_4nbvj"]
+[ext_resource type="Texture2D" uid="uid://c2yambce5snm6" path="res://Resources/Skybox/3d collection skybox.png" id="8_omdtb"]
+[ext_resource type="Texture2D" uid="uid://bx25iiq27ewap" path="res://Assets/Sights/3D Model/Earth.jpg" id="9_vufd7"]
+[ext_resource type="Texture2D" uid="uid://bha55rdfuglh5" path="res://Assets/Sights/3D Model/Earth/earth albedo.jpg" id="11_0t40j"]
+[ext_resource type="Texture2D" uid="uid://bxqpjnq15w5ex" path="res://Assets/Sights/3D Model/Textures/Diffuse_2K.png" id="12_0t40j"]
+
+[sub_resource type="Curve3D" id="Curve3D_h1ea7"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, -21, -14, 0, 6, 2, 5.647, 0, 0, 0, 21, 14, 0, -8, 0, -7.905403),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_q4u68"]
+panorama = ExtResource("8_omdtb")
+
+[sub_resource type="Sky" id="Sky_omdtb"]
+sky_material = SubResource("PanoramaSkyMaterial_q4u68")
+
+[sub_resource type="Environment" id="Environment_jtf78"]
+background_mode = 2
+sky = SubResource("Sky_omdtb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uri8j"]
+albedo_texture = ExtResource("9_vufd7")
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 30.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_uri8j"]
+material = SubResource("StandardMaterial3D_uri8j")
+radius = 5.0
+height = 10.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g0q7b"]
+albedo_texture = ExtResource("11_0t40j")
+
+[sub_resource type="Curve3D" id="Curve3D_dfhrs"]
+closed = true
+_data = {
+"points": PackedVector3Array(30, 0, 30, -30, 0, -15, 1.2943243, -0.25911304, -7.257995, 0, 0, 0, 0, 0, 0, -3.1538992, 3.9913015, 8.766376),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vufd7"]
+albedo_texture = ExtResource("12_0t40j")
+
+[sub_resource type="SphereMesh" id="SphereMesh_0t40j"]
+material = SubResource("StandardMaterial3D_vufd7")
+
+[node name="Collection Menu 3D" type="Node3D" unique_id=1267078495]
+script = ExtResource("1_4nbvj")
+
+[node name="Carousel" type="Path3D" parent="." unique_id=2114266925]
+curve = SubResource("Curve3D_h1ea7")
+debug_custom_color = Color(1, 0, 0, 1)
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Carousel" unique_id=1024092102]
+transform = Transform3D(-4.371137e-08, -0.5546998, 0.83204985, 0, 0.8320496, 0.5546999, -0.9999996, 2.4246695e-08, -3.6370054e-08, 6, 2, 5.647)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1797019940]
+transform = Transform3D(0.96954036, 0.04120398, -0.2414412, -0.15455128, 0.86764616, -0.47255078, 0.19001454, 0.49547216, 0.8475859, 5.201945, 1.339118, 6.6473284)
+fov = 77.46939
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=650472580]
+transform = Transform3D(0.96954036, 0.041203957, -0.24144118, -0.15455128, 0.86764604, -0.47255078, 0.19001454, 0.4954721, 0.8475859, 0, 0, 5.916367)
+light_energy = 2.0
+light_size = 10.0
+distance_fade_enabled = true
+omni_range = 4096.0
+omni_attenuation = 0.5
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=4992911]
+environment = SubResource("Environment_jtf78")
+
+[node name="Earth" type="MeshInstance3D" parent="." unique_id=248477276]
+transform = Transform3D(-0.313653, 0.13638021, 0.9396926, 0.39874908, 0.9170601, 0, -0.8617546, 0.37470156, -0.34202012, 0, 0, 0)
+cast_shadow = 0
+mesh = SubResource("SphereMesh_uri8j")
+surface_material_override/0 = SubResource("StandardMaterial3D_g0q7b")
+
+[node name="Path3D" type="Path3D" parent="Earth" unique_id=1143843932]
+transform = Transform3D(1, 0, 2.9802322e-08, 0, 0.9999999, 0, 0, 1.4901161e-08, 1, 0, 0, 0)
+curve = SubResource("Curve3D_dfhrs")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Earth/Path3D" unique_id=2136809820]
+transform = Transform3D(0.44721344, 0, 0.8944266, 0, 0.9999992, 0, -0.894427, 0, 0.44721323, 1.2943243, -0.25911304, -7.257995)
+
+[node name="Moon" type="MeshInstance3D" parent="Earth/Path3D/PathFollow3D" unique_id=856261383]
+mesh = SubResource("SphereMesh_0t40j")
+
+[node name="Audio Player" type="AudioStreamPlayer3D" parent="." unique_id=1404691922]

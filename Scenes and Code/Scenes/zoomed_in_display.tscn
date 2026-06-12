@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://dalcb3lev26h3"]
+
+[ext_resource type="Script" uid="uid://dfi0plnmqdmu2" path="res://Scenes and Code/Code/zoomed_in_display.gd" id="1_xjwuo"]
+
+[node name="Zoomed in Display" type="Control" unique_id=884034146]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xjwuo")
+game_name = "Lamplighters"
+month_made = 9
+year_made = 1998
+is_2D = true
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1025954880]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1418064345]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.66700006
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -0.21603394
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0, 0, 0, 0.50980395)
+
+[node name="Title Text" type="RichTextLabel" parent="ColorRect" unique_id=383806499]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0026041667
+anchor_right = 0.9982639
+anchor_bottom = 0.2638889
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 40
+text = "asdf"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Explainer Text" type="RichTextLabel" parent="ColorRect" unique_id=836085776]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.21354167
+anchor_top = 0.25925925
+anchor_right = 0.7864583
+anchor_bottom = 0.9722222
+grow_horizontal = 2
+grow_vertical = 0
+text = "Test Wordings"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Play" type="Button" parent="ColorRect" unique_id=1826313618]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7873264
+anchor_top = 0.4537037
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "PLAY!"
+metadata/_edit_use_anchors_ = true
+
+[node name="Quit" type="Button" parent="ColorRect" unique_id=634195592]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.4537037
+anchor_right = 0.2126736
+anchor_bottom = 1.0
+grow_vertical = 0
+text = "Back to Menu"
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="ColorRect/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="ColorRect/Quit" to="." method="_on_quit_pressed"]
