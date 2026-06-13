@@ -9,6 +9,7 @@ signal display_freed
 @export var year_made : int = 1998
 @export var is_2D : bool = true
 @export var thumbnail : Texture2D
+@export var explainer : String
 var is_big_display = false
 
 @onready var sub_viewport: SubViewport = $SubViewport

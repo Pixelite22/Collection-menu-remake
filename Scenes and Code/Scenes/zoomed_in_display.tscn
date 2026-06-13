@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://dalcb3lev26h3"]
+[gd_scene format=3 uid="uid://c4j7vtyqknqhr"]
 
-[ext_resource type="Script" uid="uid://dfi0plnmqdmu2" path="res://Scenes and Code/Code/zoomed_in_display.gd" id="1_xjwuo"]
+[ext_resource type="Script" uid="uid://dt1sdyg1jttht" path="res://Scenes and Code/Scenes/zoomed_in_display.gd" id="1_xjwuo"]
 
 [node name="Zoomed in Display" type="Control" unique_id=884034146]
 layout_mode = 3
@@ -10,10 +10,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xjwuo")
-game_name = "Lamplighters"
-month_made = 9
-year_made = 1998
-is_2D = true
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1025954880]
 layout_mode = 1

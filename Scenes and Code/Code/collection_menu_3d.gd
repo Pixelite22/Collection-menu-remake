@@ -8,11 +8,14 @@ signal gamecard_filled
 
 var games_to_add : Array = []
 var game_displays : Array[GameDisplay3D] = []
+var game_music_dictionary : Dictionary
 
 var moving_forward : bool = true
 var carousel_dir : int = 1
 var carousel_moving : bool = false
 var game_chosen : bool = false
+
+var target_folder = "res://Test Games/"
 
 var big_display_preload := preload("res://Scenes and Code/Scenes/game_display_3d.tscn")
 
@@ -70,7 +73,6 @@ func _process(delta: float) -> void:
 
 func fill_array():
 	#Change this variable when time to export to the file structure we are setting up
-	var target_folder = "res://Test Games/"
 	var target_folder_contents = DirAccess.get_directories_at(target_folder)
 	var possible_game
 	var game_file
@@ -82,9 +84,8 @@ func fill_array():
 	for game_folder in target_folder_contents:
 		possible_game = DirAccess.get_files_at(target_folder + game_folder)
 		for file in possible_game:
-			if file.get_extension() == "exe" or file.get_extension() == "apk" or file.get_extension() == "txt":
+			if file.get_extension() == "exe" or file.get_extension() == "apk":
 				games_to_add.append(game_folder)
-				print(game_folder)
 	
 	
 	
@@ -93,6 +94,8 @@ func fill_array():
 		for file in possible_game:
 			match file.get_extension().to_lower():
 				"exe":
+					game_file = file
+				"apk":
 					game_file = file
 				"png":
 					thumbnail_file = file
@@ -127,11 +130,11 @@ func create_gamecard(path, game, preview, music, info, game_number):
 		var new_pathfollow = PathFollow3D.new()
 		new_pathfollow.name = game
 		carousel.add_child(new_pathfollow)
-		new_pathfollow.progress_ratio = float(float(game_number) / float(games_to_add.size()))
-		
+		new_pathfollow.progress_ratio = float(float(game_number) / float(1 + games_to_add.size()))
+		print(new_pathfollow.name + "has a progress ratio of " + str(new_pathfollow.progress_ratio))
 		
 		var gamecard_instance = big_display_preload.instantiate()
-		gamecard_instance.name = game
+		gamecard_instance.name = game.replace(".exe", "_3d_display")
 		
 		if info != "":
 			var info_file : ConfigFile = ConfigFile.new()
@@ -142,14 +145,16 @@ func create_gamecard(path, game, preview, music, info, game_number):
 			gamecard_instance.month_made = info_file.get_value("Game", "month_made", gamecard_instance.month_made)
 			gamecard_instance.year_made = info_file.get_value("Game", "year_made", gamecard_instance.year_made)
 			gamecard_instance.is_2D = info_file.get_value("Game", "is_2d", gamecard_instance.is_2D)
+			gamecard_instance.explainer = info_file.get_value("Game", "explainer", gamecard_instance.explainer)
 		
 		if preview != "":
 			gamecard_instance.thumbnail = load(path + preview)
 		
 		if music != "":
-			pass
+			game_music_dictionary.get_or_add(gamecard_instance.game_name, path + music)
 		
 		new_pathfollow.add_child(gamecard_instance)
+		gamecard_instance.connect("game_clicked", game_button_pressed)
 
 #Function to tween the game cards
 func progress_tweening(gamecard_progress):
@@ -159,7 +164,7 @@ func progress_tweening(gamecard_progress):
 	#We do this by setting it's value to:
 	#the current progress plus the result of dividing 1 by the amount of game's on the list.  
 	#We also multiply this by the carousel's direction of 1 or -1 to tell which direction the games should move
-	new_progress = gamecard_progress.progress_ratio + ((1.0/game_displays.size()) * carousel_dir)
+	new_progress = gamecard_progress.progress_ratio + ((1.0/(1 + game_displays.size())) * carousel_dir)
 	
 	#Now we simply set the tween property to tween the passed card's progress ratio to the new target over the span of one second
 	tween.tween_property(gamecard_progress, "progress_ratio", new_progress, 1.0)
@@ -182,3 +187,84 @@ func tween_to_camera(gamecard_tweening):
 	
 	gamecard_tweening.global_position = og_gc_gp
 	gamecard_tweening.global_rotation = og_gc_gr
+
+func game_button_pressed(game_chose):
+	#Set pressed_button to the passed in chosen game
+	#var pressed_button = game_chose
+	#print(pressed_button)
+	#for display in game_displays:
+	#	if display.game_display.button_pressed:
+	#		pressed_button = display.game_display
+	
+	#Set menu_in_3d to true in case it somehow wasn't
+	game_menu_config.menu_in_3D = true
+	
+	await tween_to_camera(game_chose)
+	
+	#Match case to load the correct game
+	#All cases are built the same so instead, the first comment under pressed button will instead be a template
+#	match pressed_button.name:
+#		#name of game card
+#			#tween_to_camera(name of game card)
+#			#change the scene to that of the chosen game
+#		"pongalong_display_3d":
+#			print("Pongalong matched")
+#			await tween_to_camera(pongalong_display_3d)
+#			#get_tree().change_scene_to_file("res://Games/Pongalong/Scenes/main.tscn")
+#		comin_to_town_display_3d:
+#			print("Comin to town matched")
+#			await tween_to_camera(comin_to_town_display_3d)
+#			#get_tree().change_scene_to_file("res://Games/Comin To Town/Scenes/main.tscn")
+#		scoundrel_display_3d:
+#			print("Scoundrel matched")
+#			await tween_to_camera(scoundrel_display_3d)
+#			#get_tree().change_scene_to_file("res://Games/Scoundrel/Scenes and Code/Scenes/main.tscn")
+#		lamplighters_display_3d:
+#			print("Lamplighters matched")
+#			await tween_to_camera(lamplighters_display_3d)
+#			#get_tree().change_scene_to_file("res://Games/Lamplighters/Scenes and Codes/Scenes/main.tscn")
+#		hack_and_sketch_display_3d:
+#			print("Hack and Sketch matched")
+#			await tween_to_camera(hack_and_sketch_display_3d)
+#			#get_tree().change_scene_to_file("res://Games/Hack and Sketch/Scenes/Main.tscn")
+	
+	create_big_display(game_chose)
+
+func create_big_display(game_selected):
+	print(game_selected, " pressed")
+	#instantiate th preloaded big display
+	var big_display = big_display_preload.instantiate()
+	
+	#Set the big display flag to true, and pass the needed info
+	big_display.is_big_display = true
+	big_display.game_name = game_selected.game_name
+	big_display.month_made = game_selected.month_made
+	big_display.year_made = game_selected.year_made
+	big_display.is_2D = game_selected.is_2D
+	big_display.thumbnail = game_selected.thumbnail
+	big_display.explainer = game_selected.explainer
+	#big_display.look_at(camera_3d.global_position)
+	display_br_music(big_display.game_name)
+	#Add the display as a child of the camera
+	add_child(big_display)
+	
+	#And set the position just a little infront of the cmaera
+	#big_display.position = Vector3(0, 0, -0.62)
+	big_display.position = Vector3(5.351638, 1.6321, 6.121825)
+	
+	big_display.look_at(camera_3d.global_position)
+	big_display.rotate_object_local(Vector3.UP, PI)
+	big_display.rotation_degrees.z -= 10
+	#big_display.rotation = Vector3(28.2, -15.9, -10)
+	#Then connect the signal telling us when the display is freed to the right function
+	big_display.connect("display_freed", unchoose_game)
+
+func unchoose_game():
+	game_chosen = false #Set game_chosen to false so the games on the carousel look at the camera correctly again.
+	audio_player.stop()
+
+
+func display_br_music(game_name):
+	if game_name in game_music_dictionary:
+		audio_player.stream = load(game_music_dictionary[game_name])
+		audio_player.play()
