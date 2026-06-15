@@ -115,8 +115,7 @@ func fill_array():
 					info_file = file
 				"cfg":
 					info_file = file
-				
-		
+			
 		
 		create_gamecard(target_folder + game_folder + "/", game_file, thumbnail_file, music_file, info_file, index)
 		game_file = ""
@@ -124,14 +123,16 @@ func fill_array():
 		info_file = ""
 		music_file = ""
 		index += 1
+	
+	order_gamecards()
 
 func create_gamecard(path, game, preview, music, info, game_number):
 	if game != "":
 		var new_pathfollow = PathFollow3D.new()
 		new_pathfollow.name = game
 		carousel.add_child(new_pathfollow)
-		new_pathfollow.progress_ratio = float(float(game_number) / float(1 + games_to_add.size()))
-		print(new_pathfollow.name + "has a progress ratio of " + str(new_pathfollow.progress_ratio))
+		#new_pathfollow.progress_ratio = float(float(game_number) / float(games_to_add.size() - 1))
+		#print(new_pathfollow.name + "has a progress ratio of " + str(new_pathfollow.progress_ratio))
 		
 		var gamecard_instance = big_display_preload.instantiate()
 		gamecard_instance.name = game.replace(".exe", "_3d_display")
@@ -148,15 +149,34 @@ func create_gamecard(path, game, preview, music, info, game_number):
 			gamecard_instance.year_made = info_file.get_value("Game", "year_made", gamecard_instance.year_made)
 			gamecard_instance.is_2D = info_file.get_value("Game", "is_2d", gamecard_instance.is_2D)
 			gamecard_instance.explainer = info_file.get_value("Game", "explainer", gamecard_instance.explainer)
-		
+			
 		if preview != "":
 			gamecard_instance.thumbnail = load(path + preview)
 		
 		if music != "":
 			game_music_dictionary.get_or_add(gamecard_instance.game_name, path + music)
 		
+		
 		new_pathfollow.add_child(gamecard_instance)
 		gamecard_instance.connect("game_clicked", game_button_pressed)
+
+func order_gamecards():
+	var gamecards = []
+	for pathfollows in carousel.get_children():
+		gamecards.append(pathfollows.get_child(0))
+	
+	print(str(carousel.get_children().size()) + " vs " + str(games_to_add.size()))
+	
+	gamecards.sort_custom(func(a, b): 
+		if a.year_made != b.year_made:
+			return a.year_made < b.year_made
+		return a.month_made < b.month_made)
+	
+	var index = 0
+	for card in gamecards:
+		card.get_parent().progress_ratio = float(1) - float(float(index) / float(gamecards.size() + 1))
+		index += 1
+		print(card.name + " has a progress ratio of " + str(card.get_parent().progress_ratio))
 
 #Function to tween the game cards
 func progress_tweening(gamecard_progress):
@@ -183,7 +203,7 @@ func tween_to_camera(gamecard_tweening):
 	var tween = create_tween()
 	game_chosen = true
 	tween.set_parallel(true)
-	tween.tween_property(gamecard_tweening, "global_position", camera_3d.global_position + Vector3(1, 0, 0), 1.0)
+	tween.tween_property(gamecard_tweening, "global_position", camera_3d.global_position, 1.0)
 	tween.tween_property(gamecard_tweening, "global_rotation", camera_3d.global_rotation, 1.0)
 	await tween.finished
 	
