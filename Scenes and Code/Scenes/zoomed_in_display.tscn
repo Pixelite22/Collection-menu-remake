@@ -10,6 +10,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xjwuo")
+game_name = null
+month_made = null
+year_made = null
+is_2D = null
+explainer = null
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1025954880]
 layout_mode = 1

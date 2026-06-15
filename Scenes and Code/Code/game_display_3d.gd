@@ -16,6 +16,8 @@ var is_big_display = false
 @onready var control: Control = $SubViewport/Control
 @onready var game_display: TextureButton = $"SubViewport/Control/Game Display"
 
+var game_path
+
 func _ready() -> void:
 	pass
 	if game_name != "":
@@ -33,6 +35,8 @@ func setup():
 		game_display.year_made = year_made
 		game_display.is_2D = is_2D
 		game_display.texture_normal = thumbnail
+		print("Game path (via setup is): " + game_path)
+		game_display.game_path = game_path
 		#set the info and make it float
 		game_display.set_title()
 		floating_in_space()
@@ -48,7 +52,10 @@ func change_game_display():
 	big_game_display.month_made = month_made
 	big_game_display.year_made = year_made
 	big_game_display.is_2D = is_2D
+	big_game_display.explainer = explainer
 	big_game_display.display = thumbnail
+	print("Game path (via vhange_game_display is): " + game_path)
+	big_game_display.game_path = game_path
 	
 	#change the input handling so it works and the size so it displays correctly
 	sub_viewport.handle_input_locally = true
@@ -57,6 +64,7 @@ func change_game_display():
 	sub_viewport.add_child(big_game_display)
 	#and fill the display
 	big_game_display.fill_display()
+	
 	
 	#then connect the signals to the functions as necissary
 	big_game_display.play.pressed.connect(_play_button_pressed)

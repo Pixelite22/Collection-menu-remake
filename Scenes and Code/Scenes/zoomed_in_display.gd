@@ -18,6 +18,9 @@ signal quit_pressed
 @export var month_made : int 
 @export var year_made : int
 @export var is_2D : bool
+@export var explainer : String
+
+var game_path
 
 #Simply fills in the display
 func fill_display():
@@ -26,7 +29,7 @@ func fill_display():
 	#Set the title text to whether it is 2d, the games name, and the date it was made
 	title_text.text = is_2d() + " - " + game_name + " - " + date_formatting()
 	#Set the correct explainer text
-	#explainer_text.text = explainers[game_name]
+	explainer_text.text = explainer
 
 #Make the date look correct with months less then 10 still have double digits
 func date_formatting():
@@ -55,3 +58,8 @@ func _on_quit_pressed() -> void:
 	
 	queue_free() #before deleting it
 	quit_pressed.emit()
+
+
+func _on_play_pressed() -> void:
+	print("Game Path (via the actual call to play game is)" + game_path)
+	OS.create_process(game_path, [])

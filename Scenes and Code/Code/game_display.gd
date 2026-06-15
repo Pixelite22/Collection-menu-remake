@@ -9,6 +9,8 @@ extends TextureButton
 
 @onready var title: Label = $ColorRect/Title
 
+var game_path
+
 func _ready() -> void:
 	set_title()
 

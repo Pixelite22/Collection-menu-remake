@@ -136,6 +136,8 @@ func create_gamecard(path, game, preview, music, info, game_number):
 		var gamecard_instance = big_display_preload.instantiate()
 		gamecard_instance.name = game.replace(".exe", "_3d_display")
 		
+		gamecard_instance.game_path = path + game
+		
 		if info != "":
 			var info_file : ConfigFile = ConfigFile.new()
 			print(path + info)
@@ -243,6 +245,7 @@ func create_big_display(game_selected):
 	big_display.is_2D = game_selected.is_2D
 	big_display.thumbnail = game_selected.thumbnail
 	big_display.explainer = game_selected.explainer
+	big_display.game_path = game_selected.game_path 
 	#big_display.look_at(camera_3d.global_position)
 	display_br_music(big_display.game_name)
 	#Add the display as a child of the camera
