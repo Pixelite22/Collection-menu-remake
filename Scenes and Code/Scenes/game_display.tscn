@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cqtq0cuigfyfm" path="res://Scenes and Code/Code/game_display.gd" id="1_rvwf1"]
 
 [node name="Game Display" type="TextureButton" unique_id=743895997]
+custom_minimum_size = Vector2(316, 178)
 offset_right = 316.0
 offset_bottom = 178.0
 ignore_texture_size = true
@@ -21,7 +22,6 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.50980395)
 
 [node name="Title" type="Label" parent="ColorRect" unique_id=859815960]
-modulate = Color(0, 0, 0, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

@@ -88,11 +88,12 @@ func fill_array():
 		#Call the function to create a game card when the files are collected
 		create_gamecard(target_folder + game_folder + "/", game_file, thumbnail_file, music_file, info_file, index)
 		#Reset the files and increment the index
+		if game_file != "":
+			index += 1
 		game_file = ""
 		thumbnail_file = ""
 		info_file = ""
 		music_file = ""
-		index += 1
 	
 	#Reorder the gamecards by date
 #	order_gamecards()
@@ -129,7 +130,8 @@ func create_gamecard(path, game, preview, music, info, game_number):
 		#If there is a preview image, set it correctly
 		if preview != "":
 			gamecard_instance.thumbnail = load(path + preview)
-			print("Thumbnail for " + str(gamecard_instance) + " loaded")
+			gamecard_instance.texture_normal = gamecard_instance.thumbnail
+			print("Thumbnail for " + str(gamecard_instance) + " loaded at " + path + preview)
 		
 		#Same with music
 		if music != "":
@@ -145,16 +147,18 @@ func create_gamecard(path, game, preview, music, info, game_number):
 func space_games():
 	var game_amt = 0
 	var box_amt = 0
+	var card_size
 	for hbox in buttons.v_box_container.get_children():
 		for card in hbox.get_children():
 			game_amt += 1
-		hbox.add_theme_constant_override("separation", (int(color_rect.size.x) / game_amt))
+			card_size = card.custom_minimum_size
+		hbox.add_theme_constant_override("separation", ((int(color_rect.size.x) / game_amt) - (card_size.x)))
 		game_amt = 0
 		box_amt += 1
-	buttons.v_box_container.add_theme_constant_override("separation", (int(color_rect.size.x) / box_amt))
+	buttons.v_box_container.add_theme_constant_override("separation", ((int(color_rect.size.x) / box_amt) - (card_size.y * 2)))
 
-#func order_gamecards():
-#	var gamecards = []
+func order_gamecards():
+	var gamecards = []
 #	for pathfollow in carousel.get_children():
 #		#Add the gamecards to the array for easier looping and access
 #		gamecards.append(pathfollows.get_child(0))
@@ -186,8 +190,10 @@ func game_button_pressed():
 	var pressed_card #declare pressed button
 	
 	#Check all buttons to see which is being pressed
-	for hbox in hbox_dictionary:
-		for card in hbox:
+	for hbox in hbox_dictionary.values():
+		print(hbox.name)
+		for card in hbox.get_children():
+			print(card.name)
 			if card.button_pressed: #if the button being checked is being pressed
 				print(card.name)
 				pressed_card = card #set the button being pressed to the pressed button variable
@@ -269,7 +275,7 @@ func tween_display(small_display, big_display):
 #				selected_node = get_node("Menu Contents/Buttons/" + selected_game)
 
 func display_br_music(game_name):
-	audio_player.stream = game_music_dictionary[game_name]
+	audio_player.stream = load(game_music_dictionary[game_name])
 	
 	audio_player.play()
 
