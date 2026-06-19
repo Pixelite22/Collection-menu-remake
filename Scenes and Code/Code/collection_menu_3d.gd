@@ -2,27 +2,34 @@ extends Node3D
 
 signal gamecard_filled
 
+#Node Declaring
 @onready var carousel : Path3D = $Carousel
 @onready var camera_3d : Camera3D = $Camera3D
 @onready var audio_player : AudioStreamPlayer3D = $"Audio Player"
 
+#Arrays and dictionaries needed 
 var games_to_add : Array = []
 var game_displays : Array[GameDisplay3D] = []
 var game_music_dictionary : Dictionary
 
+#Variables controlling the carousel and cards on it
 var moving_forward : bool = true
 var carousel_dir : int = 1
 var carousel_moving : bool = false
 var game_chosen : bool = false
 
+#Folder games are stored in
 var target_folder = "res://Test Games/"
 
+#Preload the big_display_preload
 var big_display_preload := preload("res://Scenes and Code/Scenes/game_display_3d.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#When the screen loads, call the function that collects the game folders and sets them up as cards
 	fill_array()
 	
+	#Just adds the game display nodes into the proper array for referral
 	for paths in carousel.get_children():
 		if paths.get_child(0) is GameDisplay3D:
 			game_displays.append(paths.get_child(0))
@@ -72,7 +79,6 @@ func _process(delta: float) -> void:
 
 
 func fill_array():
-	#Change this variable when time to export to the file structure we are setting up
 	var target_folder_contents = DirAccess.get_directories_at(target_folder)
 	var possible_game
 	var game_file
@@ -81,17 +87,21 @@ func fill_array():
 	var music_file
 	var index = 0
 	
+	#for game folders in the folder they should be in
 	for game_folder in target_folder_contents:
+		#Loop through the game folders to make sure it is a folder with a game in it
 		possible_game = DirAccess.get_files_at(target_folder + game_folder)
 		for file in possible_game:
 			if file.get_extension() == "exe" or file.get_extension() == "apk":
-				games_to_add.append(game_folder)
+				games_to_add.append(game_folder) #And add it to the array
 	
 	
-	
+	#Loop through the game folders again
 	for game_folder in target_folder_contents:
+		#and loop through the possible games
 		possible_game = DirAccess.get_files_at(target_folder + game_folder)
 		for file in possible_game:
+			#and find what the file extension is, seting the file to the correct var
 			match file.get_extension().to_lower():
 				"exe":
 					game_file = file
@@ -115,31 +125,37 @@ func fill_array():
 					info_file = file
 				"cfg":
 					info_file = file
-			
 		
+		#Call the function to create a game card when the files are collected
 		create_gamecard(target_folder + game_folder + "/", game_file, thumbnail_file, music_file, info_file, index)
+		#Reset the files and increment the index
 		game_file = ""
 		thumbnail_file = ""
 		info_file = ""
 		music_file = ""
 		index += 1
 	
+	#Reorder the gamecards by date
 	order_gamecards()
 
 func create_gamecard(path, game, preview, music, info, game_number):
+	#As long as there is a game
 	if game != "":
+		#Create a pathfollow to place the gamecard on
 		var new_pathfollow = PathFollow3D.new()
 		new_pathfollow.name = game
 		carousel.add_child(new_pathfollow)
-		#new_pathfollow.progress_ratio = float(float(game_number) / float(games_to_add.size() - 1))
-		#print(new_pathfollow.name + "has a progress ratio of " + str(new_pathfollow.progress_ratio))
 		
+		#Load the card and name it
 		var gamecard_instance = big_display_preload.instantiate()
 		gamecard_instance.name = game.replace(".exe", "_3d_display")
 		
+		#And define the path to the game
 		gamecard_instance.game_path = path + game
 		
+		#If there is an info file
 		if info != "":
+			#Open it and set the details as needed
 			var info_file : ConfigFile = ConfigFile.new()
 			print(path + info)
 			info_file.load(path + info)
@@ -149,29 +165,33 @@ func create_gamecard(path, game, preview, music, info, game_number):
 			gamecard_instance.year_made = info_file.get_value("Game", "year_made", gamecard_instance.year_made)
 			gamecard_instance.is_2D = info_file.get_value("Game", "is_2d", gamecard_instance.is_2D)
 			gamecard_instance.explainer = info_file.get_value("Game", "explainer", gamecard_instance.explainer)
-			
+		
+		#If there is a preview image, set it correctly
 		if preview != "":
 			gamecard_instance.thumbnail = load(path + preview)
 		
+		#Same with music
 		if music != "":
 			game_music_dictionary.get_or_add(gamecard_instance.game_name, path + music)
 		
-		
+		#Add the card after all the info has been correctly added
 		new_pathfollow.add_child(gamecard_instance)
 		gamecard_instance.connect("game_clicked", game_button_pressed)
+
 
 func order_gamecards():
 	var gamecards = []
 	for pathfollows in carousel.get_children():
+		#Add the gamecards to the array for easier looping and access
 		gamecards.append(pathfollows.get_child(0))
 	
-	print(str(carousel.get_children().size()) + " vs " + str(games_to_add.size()))
-	
+	#sort them by year, and then month
 	gamecards.sort_custom(func(a, b): 
 		if a.year_made != b.year_made:
 			return a.year_made < b.year_made
 		return a.month_made < b.month_made)
 	
+	#And then correctly set the cards progress ratio
 	var index = 0
 	for card in gamecards:
 		card.get_parent().progress_ratio = float(1) - float(float(index) / float(gamecards.size() + 1))

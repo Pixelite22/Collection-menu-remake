@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cgc7r7lr7b2e1"]
 
 [ext_resource type="Script" uid="uid://dg2wuit8kyypn" path="res://Scenes and Code/Code/collection_menu.gd" id="1_5qddx"]
-[ext_resource type="PackedScene" uid="uid://bobdvhw4jhh8n" path="res://Scenes and Code/Scenes/game_display.tscn" id="6_dt4g8"]
+[ext_resource type="PackedScene" uid="uid://5t0qalks2l1a" path="res://Scenes and Code/Scenes/2D Button Container.tscn" id="2_axeb0"]
 
 [node name="Collection Menu" type="Control" unique_id=1766728928]
 layout_mode = 3
@@ -32,43 +32,8 @@ text = "Practice Collection!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Buttons" type="Node" parent="Menu Contents" unique_id=692177353]
-
-[node name="Pongalong Display" parent="Menu Contents/Buttons" unique_id=743895997 instance=ExtResource("6_dt4g8")]
-offset_left = 25.0
-offset_top = 143.0
-offset_right = 341.0
-offset_bottom = 321.0
-
-[node name="Comin to Town Display" parent="Menu Contents/Buttons" unique_id=1549429867 instance=ExtResource("6_dt4g8")]
-offset_left = 807.0
-offset_top = 143.0
-offset_right = 1123.0
-offset_bottom = 321.0
-
-[node name="Publix Accounting App Display" parent="Menu Contents/Buttons" unique_id=1554150830 instance=ExtResource("6_dt4g8")]
-offset_left = 25.0
-offset_top = 397.0
-offset_right = 341.0
-offset_bottom = 575.0
-
-[node name="Scoundrel Display" parent="Menu Contents/Buttons" unique_id=1173847842 instance=ExtResource("6_dt4g8")]
-offset_left = 417.0
-offset_top = 397.0
-offset_right = 733.0
-offset_bottom = 575.0
-
-[node name="Lamplighters Display" parent="Menu Contents/Buttons" unique_id=885582133 instance=ExtResource("6_dt4g8")]
-offset_left = 807.0
-offset_top = 397.0
-offset_right = 1123.0
-offset_bottom = 575.0
-
-[node name="Hack and Sketch Display" parent="Menu Contents/Buttons" unique_id=1167259582 instance=ExtResource("6_dt4g8")]
-offset_left = 417.0
-offset_top = 143.0
-offset_right = 733.0
-offset_bottom = 321.0
+[node name="Buttons" parent="Menu Contents" unique_id=1921357700 instance=ExtResource("2_axeb0")]
+offset_top = 71.0
 
 [node name="Audio Player" type="AudioStreamPlayer2D" parent="Menu Contents" unique_id=1584199159]
 

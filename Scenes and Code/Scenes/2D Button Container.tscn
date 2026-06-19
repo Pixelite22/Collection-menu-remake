@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://5t0qalks2l1a"]
+
+[ext_resource type="Script" uid="uid://bf3tp5lxaxhtm" path="res://Scenes and Code/Code/2d_button_container.gd" id="1_b7c1s"]
+
+[node name="Buttons" type="Control" unique_id=1921357700]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_b7c1s")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=860848810]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=259148761]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 30

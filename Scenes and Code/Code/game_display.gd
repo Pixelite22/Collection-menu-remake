@@ -6,6 +6,8 @@ extends TextureButton
 @export var month_made : int 
 @export var year_made : int
 @export var is_2D : bool
+@export var thumbnail : Texture2D
+@export var explainer : String
 
 @onready var title: Label = $ColorRect/Title
 
