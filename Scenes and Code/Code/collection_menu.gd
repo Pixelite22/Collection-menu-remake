@@ -101,6 +101,7 @@ func fill_array():
 func create_gamecard(path, game, preview, music, info, game_number):
 	#As long as there is a game
 	if game != "":
+		
 		if (float(game_number % 3) == 0):
 			var new_hbox = HBoxContainer.new()
 			hbox_index += 1
@@ -144,21 +145,38 @@ func create_gamecard(path, game, preview, music, info, game_number):
 		
 		space_games()
 
+#This function spaces the games to not be ontop of each other
 func space_games():
+	#Declare variables to hold important values
 	var game_amt = 0
 	var box_amt = 0
 	var card_size
+	
+	#For the hbox containers within the vbox container
 	for hbox in buttons.v_box_container.get_children():
+		#For the game cards within the currently targeted hbox
 		for card in hbox.get_children():
+			#Increment the game amount variable, 
 			game_amt += 1
+			#and find the custom minimum size of the card
+			#note this could have been found only once but it seemed easier with my current set up to just take it each time as they will be the same
 			card_size = card.custom_minimum_size
+		#Now back to focusing on the hbox,
+		#We add the seperation override, seperating the game cards horizontally by finding how many game cards there are, and dividing the size of the background by that.
+		#Then we subtract the size of the game cards to avoid over seperation
 		hbox.add_theme_constant_override("separation", ((int(color_rect.size.x) / game_amt) - (card_size.x)))
+		#Reset the game amount so the next hbox doesn't get ruined
 		game_amt = 0
+		#And increment the box amount
 		box_amt += 1
-	buttons.v_box_container.add_theme_constant_override("separation", ((int(color_rect.size.x) / box_amt) - (card_size.y * 2)))
+	
+	#Now back to focusing on the vbox
+	#Seperate the hboxes within similarly to the games in the vboxes
+	#but now divide the vertical height of the backgound by the hbox amounts, again subtracting the game card y dimension
+	buttons.v_box_container.add_theme_constant_override("separation", ((int(color_rect.size.y) / box_amt) - (card_size.y)))
 
-func order_gamecards():
-	var gamecards = []
+#func order_gamecards():
+#	var gamecards = []
 #	for pathfollow in carousel.get_children():
 #		#Add the gamecards to the array for easier looping and access
 #		gamecards.append(pathfollows.get_child(0))
@@ -178,28 +196,35 @@ func order_gamecards():
 
 
 func connect_buttons():
-	#Loop through all the burrons in the button node
+	#Loop through all the burrons in the button node and connect the pressed signal
 	for hbox in hbox_dictionary.values():
 		for cards in hbox.get_children():
 			cards.pressed.connect(game_button_pressed)
+			if cards.pressed.is_connected(game_button_pressed):
+				print("pressed connected for " + str(cards))
+			else:
+				print("pressed not connected for " + str(cards))
 
 
 #called when a game display button is pressed
 func game_button_pressed():
 	print("button pressed called")
 	var pressed_card #declare pressed button
+	var new_control = Control.new()
+	var game_num = 0
 	
 	#Check all buttons to see which is being pressed
 	for hbox in hbox_dictionary.values():
-		print(hbox.name)
+		hbox.add_child(new_control)
 		for card in hbox.get_children():
-			print(card.name)
-			if card.button_pressed: #if the button being checked is being pressed
-				print(card.name)
-				pressed_card = card #set the button being pressed to the pressed button variable
-#	#			for child in get_children():
-#	#				child.queue_free()
+			if (card is TextureButton):
+				if card.button_pressed: #if the button being checked is being pressed
+					hbox.move_child(new_control, game_num)
+					print(card.name)
+					pressed_card = card #set the button being pressed to the pressed button variable
+				game_num += 1
 	
+	pressed_card.reparent(new_control)
 	game_selected = true
 	zoomed_in_spawn(pressed_card)
 
@@ -235,6 +260,7 @@ func zoomed_in_spawn(display_zoomed):
 func tween_display(small_display, big_display):
 	#Ensure the displays are in the correct order so the smaller displays don't end up overlapping the chosen ones
 	small_display.move_to_front()
+	small_display.get_parent()
 	big_display.move_to_front()
 	
 	#Declare variables to memorize the sizes and positions of the small display, so it can be reset after the tween
